@@ -1,3 +1,5 @@
+// Import questions from JSON file
+
 // JavaScript file for interactive coding quiz
 
 // Features:
@@ -11,9 +13,9 @@ var timer = 30;
 
 // Store multiple-choice question as an object 
 var question1 = {
-    name: "",
-    options: "",
-    answer: ""
+    name: "What is the first letter of the alphabet?",
+    options: ['A','B','C','D'],
+    answer: "A"
 }
 // Set a button for the variable that starts the quiz
 var startButtonEl = document.querySelector("#start-quiz-btn");
@@ -26,13 +28,40 @@ var userScore = [];
 var startQuiz = function(){
     quizIntroEl = document.querySelector(".quiz-intro");
     quizIntroEl.setAttribute("style", "display:none");
-    questionWrapperEl.setAttribute("style", "display:initial")
+    askQuestion();
 }
 
 startButtonEl.addEventListener("click", startQuiz);
 
 
-// 2. Display the first question in the question-wrapper div
+// 2. Display a question in the question-wrapper div
+var askQuestion = function() {
+    var question = document.createElement("h3");
+    question.textContent = question1.name;
+
+    var optionsListEl = document.createElement('ol');
+    question.setAttribute("class", "question-test");
+    
+    // loop through options in the question and add a list item for each
+    console.log(question1.options.length);
+    for (var i = 0; i < question1.options.length; i++) {
+        // var answers = [];
+        var answer = document.createElement('li');
+        answer.textContent = question1.options[i];
+
+        optionsListEl.appendChild(answer);
+    }
+    
+    // Add the options for the question to the list
+    
+
+    // write the question THEN the ol so they show up in the correct order in the html
+    questionWrapperEl.append(question);
+    questionWrapperEl.append(optionsListEl);
+
+    console.log(questionWrapperEl);
+}
+
 // 3. On click of one of the list item/answers, validate the answer
 // 4. If correct, log true to userScore; if false, display the question until the correct answer is selected (but do not log)
 // 5. Loop through all the questions

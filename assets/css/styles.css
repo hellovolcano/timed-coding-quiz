@@ -26,7 +26,6 @@ header {
 }
 .question-wrapper {
     padding: 10px;
-    display: none;
 }
 /* Style for the questions that we'll dynamically add via JavaScript file */
 .question-wrapper h3 {
@@ -42,4 +41,8 @@ header {
 
 .question-wrapper ol li:hover {
     background-color: violet;
+}
+
+.question-test {
+    color: blue;
 }
