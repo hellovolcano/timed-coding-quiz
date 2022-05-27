@@ -12,12 +12,6 @@ var optionsListEl = '';
 var question = '';
 var incorrectAnswer = document.createElement("p");
 
-// Initiliaze Counter variable to 30
-var timer = 30;
-var timerEl = document.querySelector("#counter-display");
-
-// TODO--Create an array of objects -- 5 'question' objects in the array to loop through
-
 // Initialize the question number to start at the first question in the array
 var quesNum = 0;
 
@@ -35,8 +29,17 @@ var allQuestions = [
     }
 ]
 
+// Initiliaze Counter variable to 30
+var timer = 15;
+var timerEl = document.querySelector("#counter-display");
+
+// set an interval for the counter
+
+
+
 // Set a button for the variable that starts the quiz
 var startButtonEl = document.querySelector("#start-quiz-btn");
+var testIntervalEl = document.querySelector("#intervalTest");
 
 var questionWrapperEl = document.querySelector(".question-wrapper");
 var userScore = [];
@@ -44,6 +47,17 @@ var userScore = [];
 // Start quiz on button click:
 // 1. Hide the content in the quiz-intro div 
 var startQuiz = function(){
+    // start the timer!
+    var counterInterval = setInterval(function() {
+        if (timer > 0) {
+            console.log("Timer");
+            document.getElementById("counter-display").textContent = timer--;
+        } else {
+            endQuiz;
+            clearInterval(counterInterval);
+            console.log("we here now the timer is at 0")
+        }
+    }, 1000);
 
     var totalNumQuestions = allQuestions.length;
     console.log("total number of questions: " + totalNumQuestions);
@@ -160,6 +174,7 @@ var endQuiz = function() {
     addHighScoreEl.textContent = "You finished the game! Add your high score!"
 
     questionWrapperEl.append(addHighScoreEl);
+
 }
 // 4. If correct, log true to userScore; if false, display the question until the correct answer is selected (but do not log), deduct points from counter
 // 5. Loop through all the questions
@@ -188,6 +203,5 @@ var endQuiz = function() {
 
 // When the user clicks the start button, start the quiz
 startButtonEl.addEventListener("click", startQuiz);
-
 
 // When the user selects an answer, store it in a variable
