@@ -46,3 +46,9 @@ header {
 .question-test {
     color: blue;
 }
+
+/* Styles for the high score area */
+.high-score {
+    display: flex;
+    justify-content: space-between;
+}

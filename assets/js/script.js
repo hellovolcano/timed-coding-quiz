@@ -29,48 +29,83 @@ var allQuestions = [
     }
 ]
 
-// Initiliaze Counter variable to 30
+// Set the initial value of the timer and display it on the page on load
 var timer = 15;
-var timerEl = document.querySelector("#counter-display");
+document.querySelector("#counter-display").textContent = timer;
 
-// set an interval for the counter
+var quizCounter = "";
+
+var startQuiz = function() {
+    
+    
+    
+
+    // set an interval for the counter
+    quizCounter = setInterval(counterInterval, 1000);
+    console.log(quizCounter);
+
+    function counterInterval() {
+        if (timer > 0) {
+            console.log("timer");
+            document.getElementById("counter-display").textContent = timer--;
+        } else {
+            endQuiz();
+            console.log("we here now the timer is at 0")
+        }
+    };
 
 
+    buildQuiz();
+
+
+}
+
+function stopCounter() {
+    clearInterval(quizCounter);
+}
 
 // Set a button for the variable that starts the quiz
 var startButtonEl = document.querySelector("#start-quiz-btn");
-var testIntervalEl = document.querySelector("#intervalTest");
+var saveButtonEl = document.createElement("button");
+    saveButtonEl.setAttribute("class","start-quiz-btn");
+    saveButtonEl.setAttribute("id","save-button");
+    saveButtonEl.textContent = "Save your score!";
+    console.log(saveButtonEl);
 
 var questionWrapperEl = document.querySelector(".question-wrapper");
 var userScore = [];
 
 // Start quiz on button click:
-// 1. Hide the content in the quiz-intro div 
-var startQuiz = function(){
-    // start the timer!
-    var counterInterval = setInterval(function() {
-        if (timer > 0) {
-            console.log("Timer");
-            document.getElementById("counter-display").textContent = timer--;
-        } else {
-            endQuiz;
-            clearInterval(counterInterval);
-            console.log("we here now the timer is at 0")
-        }
-    }, 1000);
-
-    var totalNumQuestions = allQuestions.length;
-    console.log("total number of questions: " + totalNumQuestions);
-
+var buildQuiz = function(){
+    // hide the intro text
+      // start the timer!
+    
+    
     quizIntroEl = document.querySelector(".quiz-intro");
     quizIntroEl.setAttribute("style", "display:none");
 
+    quizLoop();
+}
+
+// This helper function displays the first question and then loops through based on how many questions there are. When no questions are left
+// it should invoke the endQuiz() function to end the quiz and stop the interval
+var quizLoop = function (interval) {
+    var totalNumQuestions = allQuestions.length;
+    console.log("total number of questions: " + totalNumQuestions);
+
+
+    // Evaluate the number of the question that is running to decide if there's any code to cleanup, or just end the quiz
     if (quesNum === 0) {
         askQuestion(quesNum);
     } else if (quesNum === allQuestions.length) {
+
         console.log("Quiz is over");
         console.log("Questions answered: " + quesNum);
+        // stopCounter();
+        console.log("does this print anything? " + interval);
         endQuiz();
+        
+        
     } else {
         console.log("Ask the next question");
 
@@ -81,18 +116,9 @@ var startQuiz = function(){
     }
 }
 
-// Check the total number of questions
-// Check the question number to ensure it's in range.
-// if not 0 and not equal to the total number of questions delete any existing question-wrapper divs
-//
-// Ask the first question & validate answer
-// Chec
-
-// 2. Display a question in the question-wrapper div
+// This section builds out one question, adds its options, and then appends it to the parent. It is called from quizLoop
 
 var askQuestion = function(num) {
-
-    // for loop to go through all the questions in the array
 
         question = document.createElement("h3");
 
@@ -136,9 +162,7 @@ var getAnswerHandler = function(event) {
         var answerToCheck = event.target.textContent;
         checkAnswerHandler(answerToCheck, quesNum);
     }
-    
-    
-}
+}   
 
 // 3. On click of one of the list item/answers, check if the answer is correct
 var checkAnswerHandler = function(answer, i) {
@@ -149,7 +173,7 @@ var checkAnswerHandler = function(answer, i) {
         console.log(quesNum);
 
         // Ask the next question
-        startQuiz();
+        quizLoop();
 
         // Remove the incorrect answer flag
         incorrectAnswer.remove();
@@ -169,20 +193,76 @@ var endQuiz = function() {
     optionsListEl.remove();
     question.remove();
 
-    // Put a placeholder in for the form to add a high score
+    // stop the interval so we can grab the score
+    stopCounter();
+
+
+    // Build out the high score collection/display
+
+    // build a div to hold the score we're collecting
+    var collectScoreDiv = document.createElement("div");
+    collectScoreDiv.setAttribute("class", "high-score");
+
+    var displayScoreEl = document.createElement("p");
+    displayScoreEl.setAttribute("id","user-score");
+    displayScoreEl.textContent = document.getElementById("counter-display").textContent;
+
+    var addInitialsEl = document.createElement("input");
+    addInitialsEl.setAttribute("type","text");
+    addInitialsEl.setAttribute("class","initials-input");
+    addInitialsEl.setAttribute("id","username");
+
+    //append the current score and the form to add initials to the collector div
+    collectScoreDiv.append(addInitialsEl);
+    collectScoreDiv.append(displayScoreEl);
+
+
+    // congratulations blurb to display above the option to save their score, 'cause we're friendly
     var addHighScoreEl = document.createElement("p");
     addHighScoreEl.textContent = "You finished the game! Add your high score!"
 
+    // Add the save button
+    
+
+    // append the collection elements to the div
     questionWrapperEl.append(addHighScoreEl);
+    questionWrapperEl.append(collectScoreDiv);
+    questionWrapperEl.append(saveButtonEl);
+
+    // define variables to hold the score to save into an obj (to eventually store into localStorage)
+   
+
+
+    // TODO: Add a save button. On save, we should save the score and username into an object and display it in the browser
 
 }
-// 4. If correct, log true to userScore; if false, display the question until the correct answer is selected (but do not log), deduct points from counter
-// 5. Loop through all the questions
-// 6. Make the counter decrement regularly and stop the game when it's at 0
-// 7. At the end of the quiz, display the score (time remaining in counter) and the option to save score (to a highScores obj)
 
 
-// MAYBE: Check to see if there is already a value in the position of the i/question # 
+// Placeholder for save score function
+var saveScore = function() {
+
+    // Get the user name and score from the form and then save it into local storage
+    var userName = document.getElementById("username").value;
+
+    console.log(userName);
+    var userScore = document.getElementById("user-score").textContent;
+    console.log(userScore)
+
+    // TODO: Check to ensure that they've submitted a user name before we save it to the object
+    var userScoreObj = {
+        name: userName,
+        score: userScore
+    }
+
+    console.log(userScoreObj);
+}
+
+// Placeholder for loading high scores. Will be invoked after the user saves their score, and when the user clicks the "High Scores" link in the header
+var loadHighScores = function() {
+    alert("I'll display high scores some day");
+}
+
+
 
 
 // ACCEPTANCE CRITERIA
@@ -203,5 +283,4 @@ var endQuiz = function() {
 
 // When the user clicks the start button, start the quiz
 startButtonEl.addEventListener("click", startQuiz);
-
-// When the user selects an answer, store it in a variable
+saveButtonEl.addEventListener("click", saveScore);
