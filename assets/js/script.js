@@ -12,6 +12,10 @@ var optionsListEl = '';
 var question = '';
 var givefeedbackEl = document.createElement("div");
 
+// Variables for the feedback section; TODO -- Figure out how to minimize the use of global variables
+var corOrWrongEl = document.createElement('p');
+var lineBreakEl = document.createElement("hr");
+
 // Initialize the question number to start at the first question in the array
 var quesNum = 0;
 
@@ -76,6 +80,11 @@ var retakeQuizBtnEl = document.createElement("button");
     retakeQuizBtnEl.setAttribute("class","start-quiz-btn");
     retakeQuizBtnEl.setAttribute("id","retake-quiz-btn");
     retakeQuizBtnEl.textContent = "Retake Quiz";
+// Clear high scores button
+var clearScoresBtnEl = document.createElement("button");
+    clearScoresBtnEl.setAttribute("class","start-quiz-btn");
+    clearScoresBtnEl.setAttribute("id","clear-scores-btn");
+    clearScoresBtnEl.textContent = "Clear High Scores";
 
 var questionWrapperEl = document.querySelector(".question-wrapper");
 var userScore = [];
@@ -166,27 +175,23 @@ var getAnswerHandler = function(event) {
 
 // 3. On click of one of the list item/answers, check if the answer is correct
 var checkAnswerHandler = function(answer, i) {
-    var ans = '';
     if (answer === allQuestions[i].answer) {
-
+        
         // if the answer is correct, increment the global question number and then ask the next question
         quesNum++;
-        ans = true;
+        giveFeedback(true);
 
     } else {
-        ans = false;
+        giveFeedback(false);
         timer -= 6;   
     }
-
-    giveFeedback(ans);
 }
 
 var giveFeedback = function(boolean) {
 
     givefeedbackEl.setAttribute("class", "feedback-response");
     
-    var corOrWrongEl =document.createElement('p');
-    var lineBreakEl = document.createElement("hr");
+
 
     if (boolean) {
         corOrWrongEl.textContent = "Correct!";
@@ -203,12 +208,14 @@ var giveFeedback = function(boolean) {
     
 
     questionWrapperEl.after(givefeedbackEl);
-    
+
 }
 
 
 var clearFeedback = function() {
     givefeedbackEl.remove();
+    // lineBreakEl.remove();
+    corOrWrongEl.remove();
 }
 var endQuiz = function() {
     // Remove questions and answers
@@ -266,6 +273,7 @@ var saveScore = function() {
 
     // Make sure anything stored in local storage last time is included in the array we're saving to
     scores = localStorage.getItem("score");
+
     scores = JSON.parse(scores);
     
     // if there is nothing in local storage, let's reset the value of scores back to an empty array
@@ -316,18 +324,36 @@ var loadHighScores = function() {
     questionWrapperEl.remove();
 
     scores = localStorage.getItem("score");
-    
+
+    // Defining variables needed whether or not their are existing high scores
+    var quizWrapperEl = document.querySelector("#quiz-wrapper");
+    var buttonWrapperEl = document.createElement("div");
+    buttonWrapperEl.setAttribute("class","button-wrapper");
+
+    // add buttons to button wrapper div to help with positioning
+    buttonWrapperEl.appendChild(retakeQuizBtnEl);
+    buttonWrapperEl.appendChild(clearScoresBtnEl);
+
+    // append the button wrapper to the quiz wrapper
+    quizWrapperEl.appendChild(buttonWrapperEl);
+
     if (scores === null) {
         scores = [];
         
+        // Add some text to the website if there are no scores to load
+        var noScoresEl = document.createElement("h1");
+        noScoresEl.textContent = "No one has taken this quiz yet. Be the first!"
+
+        quizWrapperEl.prepend(noScoresEl);
         return false;
 
     }
 
-    var quizWrapperEl = document.querySelector("#quiz-wrapper");
+    
     
     var highScoreListEl = document.createElement("ol");
     highScoreListEl.setAttribute("class","high-score");
+    highScoreListEl.setAttribute("id","high-score");
 
     scores = JSON.parse(scores);
     
@@ -348,14 +374,15 @@ var loadHighScores = function() {
         containerDivEl.setAttribute("class","container-score");
         
         var nameDivEl = document.createElement("div");
-        nameDivEl.textContent = scores[i].score;
+        nameDivEl.textContent = (i+1) + '. ' + scores[i].name;
 
         var scoreDivEl = document.createElement("div");
-        scoreDivEl.textContent = scores[i].name;
+        scoreDivEl.textContent = scores[i].score;
 
         // Add name and score as div within a div so we can easily use justify-content to get the right alignment
-        containerDivEl.appendChild(scoreDivEl);
         containerDivEl.appendChild(nameDivEl);
+        containerDivEl.appendChild(scoreDivEl);
+        
         
 
         highScoreEl.appendChild(containerDivEl);
@@ -371,16 +398,23 @@ var loadHighScores = function() {
 
     // Add a button to retake quiz
 
+    quizWrapperEl.prepend(highScoreListEl);
+    quizWrapperEl.prepend(highScoreTitleEl);
 
 
-    quizWrapperEl.appendChild(highScoreTitleEl);
-    quizWrapperEl.appendChild(highScoreListEl);
-
-    quizWrapperEl.appendChild(retakeQuizBtnEl);
 }
 
 var retakeQuiz = function() {
     location.reload();
+}
+
+var clearScores = function() {
+    // clear the value stored in local storage
+    localStorage.removeItem("score");
+
+    // clear the scores displayed in the browser
+    var getHighScoresEl = document.querySelector("#high-score")
+    getHighScoresEl.remove();
 }
 
 
@@ -400,8 +434,17 @@ var retakeQuiz = function() {
 
 // EVENT LISTENERS
 
-// When the user clicks the start button, start the quiz
+// on start button click, start the quiz
 startButtonEl.addEventListener("click", startQuiz);
+
+// on save button click, save the scores
 saveButtonEl.addEventListener("click", saveScore);
+
+//on retake quiz button click, reload the page
 retakeQuizBtnEl.addEventListener("click", retakeQuiz);
-questionWrapperEl.addEventListener("mouseover", clearFeedback);
+
+// on clear scoresa click, clear the scores saved to local storage
+clearScoresBtnEl.addEventListener("click", clearScores);
+
+// clear the feedback display when the user moves the mouse
+questionWrapperEl.addEventListener("mousemove", clearFeedback);

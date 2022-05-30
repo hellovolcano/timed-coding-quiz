@@ -48,10 +48,9 @@ header a:hover {
     border-radius: 10px;
     width: 40%;
     margin: 0 auto;
-    border: 1px black solid;
     display: flex;
     justify-content: center;
-    padding: 40px;
+    padding: 50px;
     flex-direction: column;
 }
 .question-wrapper {
@@ -83,6 +82,8 @@ header a:hover {
 /* Styles for the high score table */
 .high-score {
     margin-top: 15px;
+    list-style-type: none;
+    padding-left: 0px;
 }
 
 .container-score {
@@ -93,22 +94,32 @@ header a:hover {
 .even-score-li {
     background-color: lightgray;
     padding: 10px;
-    margin-bottom: 5px
+    margin-bottom: 5px;
+    border-radius: 5px;
 }
 
 
 .odd-score-li {
-    background-color: lightsalmon;
+    background-color: grey;
     padding: 10px;
     margin-bottom: 5px;
+    border-radius: 5px;
 }
 
+/* Add spacing between the buttons in the high scores display */
+.button-wrapper button {
+    margin-right: 10px;
+}
 
 /* Feedback section */
 
 .feedback-response {
     font-style: italic;
-    size: 1.1rem;
     margin-top: 20px;
     color: grey;
+}
+
+.feedback-response p {
+    margin-top: 20px;
+    size: 1.5rem
 }
