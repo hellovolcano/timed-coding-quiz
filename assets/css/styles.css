@@ -45,7 +45,6 @@ header a:hover {
 /* QUIZ WRAPPER STYLES */
 
 .quiz-wrapper {
-    border-radius: 10px;
     width: 40%;
     margin: 0 auto;
     display: flex;
@@ -122,4 +121,18 @@ header a:hover {
 .feedback-response p {
     margin-top: 20px;
     size: 1.5rem
+}
+
+@media screen and (max-width: 400px) {
+    main {
+        width: 100%;
+    }
+    .quiz-wrapper {
+        width: auto;
+        padding: 10px;
+    }
+    header {
+        margin-bottom: 10px;
+    }
+
 }

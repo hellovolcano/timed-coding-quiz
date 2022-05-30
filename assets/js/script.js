@@ -142,6 +142,7 @@ var askQuestion = function(num) {
         // loop through all the options in the object for the question and add them as list items
         for (var i = 0; i < allQuestions[num].options.length; i++) {
             // var answers = [];
+            // var ansLiEl = document.createElement('li');
             var answer = document.createElement('li');
     
             // Add the options for the question to the list
@@ -149,6 +150,7 @@ var askQuestion = function(num) {
 
             // set a class for a possible answer for our event listeners to know when to do something
             answer.setAttribute("class","answer-selections");
+            // ansLiEl.textContent = (i+1) + ". " + answer.textContent;
     
             optionsListEl.appendChild(answer);
         } // end of the for loop to append the options to the question
@@ -166,7 +168,7 @@ var askQuestion = function(num) {
 // function for the event listener to store the user's selection in a variable
 var getAnswerHandler = function(event) {
     var targetEl = event.target;
-
+    console.log(event.target);
     if (targetEl.matches('.answer-selections')) {
         var answerToCheck = event.target.textContent;
         checkAnswerHandler(answerToCheck, quesNum);
