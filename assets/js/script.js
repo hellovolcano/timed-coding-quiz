@@ -275,7 +275,15 @@ var saveScore = function() {
         name: userName,
         score: userScore
     }
-
+    // reorder the scores in the array to be highest to lowest using bubble sort
+    for(var i = 0; i < scores.length; i++){
+        for(var j = 0; j < scores.length - i - 1; j++) {
+        // compare using descending order and swap if the first compare is larger
+        if (parseInt(scores[j+1].score) > parseInt(scores[j].score)) {
+            [scores[j+1],scores[j]] = [scores[j],scores[j+1]]
+        }
+        }
+  }
     scores.push(userScoreObj);
 
     localStorage.setItem("score",JSON.stringify(scores));
