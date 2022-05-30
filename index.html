@@ -10,30 +10,20 @@
 <body>
 <header>
     <div>
-        <a href="#">High scores</a>
+        <a onclick="loadHighScores()" id="high-scores">High scores</a>
     </div>
     <div>
-        <p>Count</p>
+        <p>Count: <span id="counter-display"></span></p>
     </div>
 </header>
 <main>
-    <div class="quiz-wrapper">
+    <div class="quiz-wrapper" id="quiz-wrapper">
         <div class="quiz-intro">
             <h1>Coding Quiz</h1>
             <p>Try your hand at the quiz questions and test your knowledge of web development so far. The quiz contains questions about HTML, CSS, and JavaScript. Good luck!</p>
             <button class="start-quiz-btn" id="start-quiz-btn" name="start-quiz-btn">Start Quiz</button>
         </div>
         <div class="question-wrapper">
-            
-            
-            
-            <h3>What is the answer to everything?</h3>
-            <ol>
-                <li>Pizza</li>
-                <li>42</li>
-                <li>Steve Jobs</li>
-                <li>Los Patos</li>
-            </ol>
         </div>
     </div>
 

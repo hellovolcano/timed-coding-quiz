@@ -9,37 +9,130 @@ header {
     display: flex;
     justify-content: space-between;
     padding: 10px;
+    margin-bottom: 100px;
+    margin-top: 20px;
 }
 
+header a {
+    color:darkslateblue;
+    padding: 15px;
+}
+
+header a:hover {
+    color: white;
+    background-color: darkslateblue;
+    border-radius: 5px;
+}
+
+/* Styles for the initial greeting displayed on the page */
+.quiz-intro h1 {
+    margin-bottom: 15px;
+}
+
+.start-quiz-btn {
+    background-color: darkslateblue;
+    padding: 15px;
+    border-radius: 5px;
+    color: white;
+    border: 0;
+    margin-top: 15px;
+}
+
+.start-quiz-btn:hover {
+    background-color: violet;
+}
 
 /* QUIZ WRAPPER STYLES */
 
 .quiz-wrapper {
-    border-radius: 10px;
     width: 40%;
     margin: 0 auto;
-    border: 1px black solid;
     display: flex;
     justify-content: center;
-    padding: 40px;
+    padding: 50px;
     flex-direction: column;
 }
 .question-wrapper {
     padding: 10px;
-    display: none;
 }
 /* Style for the questions that we'll dynamically add via JavaScript file */
-.question-wrapper h3 {
-    font-size: 1.1rem;
+.question-wrapper h2 {
+    font-size: 2.0rem;
+    line-height: 2.2rem;
+    margin-bottom: 25px;
 }
 
 .question-wrapper ol li {
-    background-color: purple;
-    padding: 5px;
+    background-color: darkslateblue;
+    padding: 15px;
     border-radius: 5px;
     margin: 5px 0 5px 0;
 }
 
 .question-wrapper ol li:hover {
     background-color: violet;
+}
+
+/* This class can probably be deleted */
+.question-test {
+    color: black;
+}
+
+/* Styles for the high score table */
+.high-score {
+    margin-top: 15px;
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+.container-score {
+    display: flex;
+    justify-content: space-between;
+}
+/* apply different colors for alternative high scores */
+.even-score-li {
+    background-color: lightgray;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+
+.odd-score-li {
+    background-color: grey;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+/* Add spacing between the buttons in the high scores display */
+.button-wrapper button {
+    margin-right: 10px;
+}
+
+/* Feedback section */
+
+.feedback-response {
+    font-style: italic;
+    margin-top: 20px;
+    color: grey;
+}
+
+.feedback-response p {
+    margin-top: 20px;
+    size: 1.5rem
+}
+
+@media screen and (max-width: 400px) {
+    main {
+        width: 100%;
+    }
+    .quiz-wrapper {
+        width: auto;
+        padding: 10px;
+    }
+    header {
+        margin-bottom: 10px;
+    }
+
 }
