@@ -66,10 +66,16 @@ function stopCounter() {
 
 // Set a button for the variable that starts the quiz
 var startButtonEl = document.querySelector("#start-quiz-btn");
+// Save button 
 var saveButtonEl = document.createElement("button");
     saveButtonEl.setAttribute("class","start-quiz-btn");
     saveButtonEl.setAttribute("id","save-button");
     saveButtonEl.textContent = "Save your score!";
+// Retake quiz button for the high scores display
+var retakeQuizBtnEl = document.createElement("button");
+    retakeQuizBtnEl.setAttribute("class","start-quiz-btn");
+    retakeQuizBtnEl.setAttribute("id","retake-quiz-btn");
+    retakeQuizBtnEl.textContent = "Retake Quiz";
 
 var questionWrapperEl = document.querySelector(".question-wrapper");
 var userScore = [];
@@ -279,17 +285,18 @@ var saveScore = function() {
         name: userName,
         score: userScore
     }
+
+    scores.push(userScoreObj);
+
     // reorder the scores in the array to be highest to lowest using bubble sort
     for(var i = 0; i < scores.length; i++){
         for(var j = 0; j < scores.length - i - 1; j++) {
-        // compare using descending order and swap if the first compare is larger
-        if (parseInt(scores[j+1].score) > parseInt(scores[j].score)) {
-            [scores[j+1],scores[j]] = [scores[j],scores[j+1]]
+            // compare using descending order and swap if the first compare is larger
+            if (parseInt(scores[j+1].score) > parseInt(scores[j].score)) {
+                [scores[j+1],scores[j]] = [scores[j],scores[j+1]]
+            }
         }
-        }
-  }
-    scores.push(userScoreObj);
-
+    }
     localStorage.setItem("score",JSON.stringify(scores));
 
     loadHighScores();
@@ -362,11 +369,19 @@ var loadHighScores = function() {
     var highScoreTitleEl = document.createElement("h1");
     highScoreTitleEl.textContent = "High Scores";
 
+    // Add a button to retake quiz
+
+
+
     quizWrapperEl.appendChild(highScoreTitleEl);
     quizWrapperEl.appendChild(highScoreListEl);
+
+    quizWrapperEl.appendChild(retakeQuizBtnEl);
 }
 
-
+var retakeQuiz = function() {
+    location.reload();
+}
 
 
 // ACCEPTANCE CRITERIA
@@ -388,4 +403,5 @@ var loadHighScores = function() {
 // When the user clicks the start button, start the quiz
 startButtonEl.addEventListener("click", startQuiz);
 saveButtonEl.addEventListener("click", saveScore);
+retakeQuizBtnEl.addEventListener("click", retakeQuiz);
 questionWrapperEl.addEventListener("mouseover", clearFeedback);
