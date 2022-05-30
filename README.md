@@ -5,3 +5,6 @@ This coding quiz leverage JavaScript to loop through a series of questions. When
 
 ## Deployed App
 [Coding Quiz](https://github.com/hellovolcano/timed-coding-quiz)
+
+## TODO
+- Move questions to a separate JSON file and import

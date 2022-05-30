@@ -1,12 +1,6 @@
-// Import questions from JSON file
-
 // JavaScript file for interactive coding quiz
 
-// Features:
-//  - Quiz is timed
-//  - High scores are saved
-//  - Asnwers to questions are validated to input into high score
-
+// GLOBAL VARIABLES
 // initialize these so I can delete them before asking the next question
 var optionsListEl = '';
 var question = '';
@@ -22,14 +16,29 @@ var quesNum = 0;
 // Store multiple-choice questions as an array of objects
 var allQuestions = [
     {
-        name: "What is the first letter of the alphabet?",
-        options: ['A','B','C','D'],
-        answer: "A"
+        name: "Commonly used data types DO NOT include ________.",
+        options: ['Booleans','Alerts','Strings','Arrays'],
+        answer: "Alerts"
     },
     {
-        name: "What is the greatest band of all time?",
-        options: ['KISS','Boyz II Men','Chumbawumba','Josh Groban'],
-        answer: "Chumbawumba"
+        name: "Arrays in JavaScript can be used to store _______.",
+        options: ['Strings','Objects','Booleans','All of the above'],
+        answer: "All of the above"
+    },
+    {
+        name: "A very useful tool for debbuging during development and printing to the console is _______.",
+        options: ['For loop','Debugger','console.log','If/Else Statement'],
+        answer: "console.log"
+    },
+    {
+        name: "An array is enclosed between ______.",
+        options: ['Square brackets','Curly braces','Quotation marks','Parentheses'],
+        answer: "Square brackets"
+    },
+    {
+        name: "JavaScript code is read _______.",
+        options: ['Bottom to top','Top to bottom','In whatever order you want','Random order'],
+        answer: "Top to bottom"
     }
 ]
 
@@ -38,14 +47,35 @@ var scores = [];
 
 // Set the initial value of the timer and display it on the page on load
 var timer = 0;
-document.querySelector("#counter-display").textContent = timer;
-
 var quizCounter = "";
+
+// Set a button for the variable that starts the quiz
+var startButtonEl = document.querySelector("#start-quiz-btn");
+// Save button 
+var saveButtonEl = document.createElement("button");
+    saveButtonEl.setAttribute("class","start-quiz-btn");
+    saveButtonEl.setAttribute("id","save-button");
+    saveButtonEl.textContent = "Save your score!";
+// Retake quiz button for the high scores display
+var retakeQuizBtnEl = document.createElement("button");
+    retakeQuizBtnEl.setAttribute("class","start-quiz-btn");
+    retakeQuizBtnEl.setAttribute("id","retake-quiz-btn");
+    retakeQuizBtnEl.textContent = "Retake Quiz";
+// Clear high scores button
+var clearScoresBtnEl = document.createElement("button");
+    clearScoresBtnEl.setAttribute("class","start-quiz-btn");
+    clearScoresBtnEl.setAttribute("id","clear-scores-btn");
+    clearScoresBtnEl.textContent = "Clear High Scores";
+
+var questionWrapperEl = document.querySelector(".question-wrapper");
+var userScore = [];
+
+document.querySelector("#counter-display").textContent = timer;
 
 var startQuiz = function() {
 
     // set an interval for the counter
-    timer = 15;
+    timer = 45;
     
     
     function counterInterval() {
@@ -68,26 +98,6 @@ function stopCounter() {
     clearInterval(quizCounter);
 }
 
-// Set a button for the variable that starts the quiz
-var startButtonEl = document.querySelector("#start-quiz-btn");
-// Save button 
-var saveButtonEl = document.createElement("button");
-    saveButtonEl.setAttribute("class","start-quiz-btn");
-    saveButtonEl.setAttribute("id","save-button");
-    saveButtonEl.textContent = "Save your score!";
-// Retake quiz button for the high scores display
-var retakeQuizBtnEl = document.createElement("button");
-    retakeQuizBtnEl.setAttribute("class","start-quiz-btn");
-    retakeQuizBtnEl.setAttribute("id","retake-quiz-btn");
-    retakeQuizBtnEl.textContent = "Retake Quiz";
-// Clear high scores button
-var clearScoresBtnEl = document.createElement("button");
-    clearScoresBtnEl.setAttribute("class","start-quiz-btn");
-    clearScoresBtnEl.setAttribute("id","clear-scores-btn");
-    clearScoresBtnEl.textContent = "Clear High Scores";
-
-var questionWrapperEl = document.querySelector(".question-wrapper");
-var userScore = [];
 
 // Removes intro content and starts the function that loops through and displays the quiz questions
 var buildQuiz = function(){
@@ -175,7 +185,7 @@ var getAnswerHandler = function(event) {
     }
 }   
 
-// 3. On click of one of the list item/answers, check if the answer is correct
+// On click of one of the list item/answers, check if the answer is correct
 var checkAnswerHandler = function(answer, i) {
     if (answer === allQuestions[i].answer) {
         
@@ -197,14 +207,18 @@ var giveFeedback = function(boolean) {
 
     if (boolean) {
         corOrWrongEl.textContent = "Correct!";
-
         //ask the next question
         quizLoop();
 
     } else {
+        //let them have another chance to answer the question
         corOrWrongEl.textContent = "Incorrect";
+ 
+
 
     }
+
+    
     givefeedbackEl.append(lineBreakEl);
     givefeedbackEl.append(corOrWrongEl);
     
@@ -251,25 +265,16 @@ var endQuiz = function() {
     // congratulations blurb to display above the option to save their score, 'cause we're friendly
     var addHighScoreEl = document.createElement("h1");
     addHighScoreEl.textContent = "All Done!"
-
-    // Add the save button
     
 
     // append the collection elements to the div
     questionWrapperEl.append(addHighScoreEl);
     questionWrapperEl.append(collectScoreDiv);
     questionWrapperEl.append(saveButtonEl);
-
-    // define variables to hold the score to save into an obj (to eventually store into localStorage)
-   
-
-
-    // TODO: Add a save button. On save, we should save the score and username into an object and display it in the browser
-
 }
 
 
-// Placeholder for save score function
+// Save the scores into localStorage
 var saveScore = function() {
     // debugger;
 
@@ -314,7 +319,7 @@ var saveScore = function() {
 
 
 
-// Placeholder for loading high scores. Will be invoked after the user saves their score, and when the user clicks the "High Scores" link in the header
+// Load high scores. Will be invoked after the user saves their score, and when the user clicks the "High Scores" link in the header
 var loadHighScores = function() {
 
     // stop counter from counting down if the user clicked the high scores link mid-quiz
@@ -418,21 +423,6 @@ var clearScores = function() {
     var getHighScoresEl = document.querySelector("#high-score")
     getHighScoresEl.remove();
 }
-
-
-// ACCEPTANCE CRITERIA
-
-// GIVEN I am taking a code quiz
-// WHEN I click the start button
-// THEN a timer starts and I am presented with a question
-// WHEN I answer a question
-// THEN I am presented with another question
-// WHEN I answer a question incorrectly
-// THEN time is subtracted from the clock
-// WHEN all questions are answered or the timer reaches 0
-// THEN the game is over
-// WHEN the game is over
-// THEN I can save my initials and score
 
 // EVENT LISTENERS
 
