@@ -29,7 +29,8 @@ header {
 }
 /* Style for the questions that we'll dynamically add via JavaScript file */
 .question-wrapper h3 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
 }
 
 .question-wrapper ol li {
@@ -44,11 +45,44 @@ header {
 }
 
 .question-test {
-    color: blue;
+    color: black;
 }
 
-/* Styles for the high score area */
+/* Styles for the high score table */
 .high-score {
+    margin: 5px;
+}
+
+.container-score {
     display: flex;
     justify-content: space-between;
+}
+/* apply different colors for alternative high scores */
+.even-score-li {
+    background-color: lightgray;
+    padding: 10px;
+    padding-left: 20px;
+}
+
+.even-score-li:before {
+    background-color: burlywood;
+    width: 20px;
+    z-index: -1;
+    position: absolute;
+}
+
+.odd-score-li {
+    background-color: lightsalmon;
+    padding: 10px;
+    margin-left: 20px;
+}
+
+
+/* Feedback section */
+
+.feedback-response {
+    font-style: italic;
+    size: 1.1rem;
+    margin: 10px;
+    color: grey;
 }

@@ -10,7 +10,7 @@
 // initialize these so I can delete them before asking the next question
 var optionsListEl = '';
 var question = '';
-var incorrectAnswer = document.createElement("p");
+var givefeedbackEl = document.createElement("div");
 
 // Initialize the question number to start at the first question in the array
 var quesNum = 0;
@@ -29,35 +29,31 @@ var allQuestions = [
     }
 ]
 
+// Initialize empty array to store the scores in local storage
+var scores = [];
+
 // Set the initial value of the timer and display it on the page on load
-var timer = 15;
+var timer = 0;
 document.querySelector("#counter-display").textContent = timer;
 
 var quizCounter = "";
 
 var startQuiz = function() {
-    
-    
-    
 
     // set an interval for the counter
     quizCounter = setInterval(counterInterval, 1000);
-    console.log(quizCounter);
-
+    
+    timer = 15;
     function counterInterval() {
-        if (timer > 0) {
-            console.log("timer");
+        if (timer >= 0) {
+            
             document.getElementById("counter-display").textContent = timer--;
         } else {
             endQuiz();
-            console.log("we here now the timer is at 0")
         }
     };
 
-
     buildQuiz();
-
-
 }
 
 function stopCounter() {
@@ -70,17 +66,14 @@ var saveButtonEl = document.createElement("button");
     saveButtonEl.setAttribute("class","start-quiz-btn");
     saveButtonEl.setAttribute("id","save-button");
     saveButtonEl.textContent = "Save your score!";
-    console.log(saveButtonEl);
 
 var questionWrapperEl = document.querySelector(".question-wrapper");
 var userScore = [];
 
-// Start quiz on button click:
+// Removes intro content and starts the function that loops through and displays the quiz questions
 var buildQuiz = function(){
+
     // hide the intro text
-      // start the timer!
-    
-    
     quizIntroEl = document.querySelector(".quiz-intro");
     quizIntroEl.setAttribute("style", "display:none");
 
@@ -90,8 +83,7 @@ var buildQuiz = function(){
 // This helper function displays the first question and then loops through based on how many questions there are. When no questions are left
 // it should invoke the endQuiz() function to end the quiz and stop the interval
 var quizLoop = function (interval) {
-    var totalNumQuestions = allQuestions.length;
-    console.log("total number of questions: " + totalNumQuestions);
+    // var totalNumQuestions = allQuestions.length;
 
 
     // Evaluate the number of the question that is running to decide if there's any code to cleanup, or just end the quiz
@@ -99,19 +91,17 @@ var quizLoop = function (interval) {
         askQuestion(quesNum);
     } else if (quesNum === allQuestions.length) {
 
-        console.log("Quiz is over");
-        console.log("Questions answered: " + quesNum);
         // stopCounter();
-        console.log("does this print anything? " + interval);
         endQuiz();
         
         
     } else {
-        console.log("Ask the next question");
 
         // remove existing question div
         optionsListEl.remove();
         question.remove();
+
+        // ask the next question
         askQuestion(quesNum);
     }
 }
@@ -166,27 +156,48 @@ var getAnswerHandler = function(event) {
 
 // 3. On click of one of the list item/answers, check if the answer is correct
 var checkAnswerHandler = function(answer, i) {
+    var ans = '';
     if (answer === allQuestions[i].answer) {
-        console.log ("You selected the correct answer")
+
         // if the answer is correct, increment the global question number and then ask the next question
         quesNum++;
-        console.log(quesNum);
+        ans = true;
 
-        // Ask the next question
+    } else {
+        ans = false;   
+    }
+
+    giveFeedback(ans);
+}
+
+var giveFeedback = function(boolean) {
+
+    givefeedbackEl.setAttribute("class", "feedback-response");
+    
+    var corOrWrongEl =document.createElement('p');
+    var lineBreakEl = document.createElement("hr");
+
+    if (boolean) {
+        corOrWrongEl.textContent = "Correct!";
+
+        //ask the next question
         quizLoop();
 
-        // Remove the incorrect answer flag
-        incorrectAnswer.remove();
     } else {
+        corOrWrongEl.textContent = "Incorrect";
 
-        timer -= 5; // Decrement timer
-
-        // TODO: refactor so incorrectAnswer doesn't need to be a global variable
-        incorrectAnswer.setAttribute("class", "incorrect-answer");
-        incorrectAnswer.textContent = "Wrong!";
-
-        questionWrapperEl.after(incorrectAnswer);
     }
+    givefeedbackEl.append(lineBreakEl);
+    givefeedbackEl.append(corOrWrongEl);
+    
+
+    questionWrapperEl.after(givefeedbackEl);
+    
+}
+
+
+var clearFeedback = function() {
+    givefeedbackEl.remove();
 }
 var endQuiz = function() {
     // Remove questions and answers
@@ -196,7 +207,6 @@ var endQuiz = function() {
     // stop the interval so we can grab the score
     stopCounter();
 
-
     // Build out the high score collection/display
 
     // build a div to hold the score we're collecting
@@ -205,7 +215,9 @@ var endQuiz = function() {
 
     var displayScoreEl = document.createElement("p");
     displayScoreEl.setAttribute("id","user-score");
-    displayScoreEl.textContent = document.getElementById("counter-display").textContent;
+
+    var scoreToDisplay = document.getElementById("counter-display").textContent;
+    displayScoreEl.textContent = "Your score is: " + scoreToDisplay;
 
     var addInitialsEl = document.createElement("input");
     addInitialsEl.setAttribute("type","text");
@@ -213,13 +225,12 @@ var endQuiz = function() {
     addInitialsEl.setAttribute("id","username");
 
     //append the current score and the form to add initials to the collector div
-    collectScoreDiv.append(addInitialsEl);
     collectScoreDiv.append(displayScoreEl);
-
+    collectScoreDiv.append(addInitialsEl);
 
     // congratulations blurb to display above the option to save their score, 'cause we're friendly
-    var addHighScoreEl = document.createElement("p");
-    addHighScoreEl.textContent = "You finished the game! Add your high score!"
+    var addHighScoreEl = document.createElement("h1");
+    addHighScoreEl.textContent = "All Done!"
 
     // Add the save button
     
@@ -240,26 +251,106 @@ var endQuiz = function() {
 
 // Placeholder for save score function
 var saveScore = function() {
+    // debugger;
+
+    // Make sure anything stored in local storage last time is included in the array we're saving to
+    scores = localStorage.getItem("score");
+    scores = JSON.parse(scores);
+    
+    // if there is nothing in local storage, let's reset the value of scores back to an empty array
+
+    if (scores === null) {
+        scores = [];
+    }
 
     // Get the user name and score from the form and then save it into local storage
     var userName = document.getElementById("username").value;
-
-    console.log(userName);
-    var userScore = document.getElementById("user-score").textContent;
-    console.log(userScore)
-
+    var userScore = document.getElementById("counter-display").textContent;
+    
+    console.log(userScore);
+    // Store it all in an object so we can eventually save it to localStorage
     // TODO: Check to ensure that they've submitted a user name before we save it to the object
     var userScoreObj = {
         name: userName,
         score: userScore
     }
 
-    console.log(userScoreObj);
+    scores.push(userScoreObj);
+
+    localStorage.setItem("score",JSON.stringify(scores));
+
+    loadHighScores();
 }
+
+
 
 // Placeholder for loading high scores. Will be invoked after the user saves their score, and when the user clicks the "High Scores" link in the header
 var loadHighScores = function() {
-    alert("I'll display high scores some day");
+
+    // stop counter from counting down if the user clicked the high scores link mid-quiz
+    clearInterval(quizCounter);
+
+    // hide/remove any items that might be present
+    quizIntroEl = document.querySelector(".quiz-intro");
+    quizIntroEl.setAttribute("style", "display:none");
+    questionWrapperEl.remove();
+
+    scores = localStorage.getItem("score");
+    
+    if (scores === null) {
+        scores = [];
+        
+        return false;
+
+    }
+
+    var quizWrapperEl = document.querySelector("#quiz-wrapper");
+    
+    var highScoreListEl = document.createElement("ol");
+    highScoreListEl.setAttribute("class","high-score");
+
+    scores = JSON.parse(scores);
+    
+    for (var i=0; i < scores.length; i++) {
+        
+        //create list item
+        var highScoreEl = document.createElement("li");
+
+        //if i is even, apply a specific color
+        if (i % 2) {
+            highScoreEl.setAttribute("class","even-score-li");
+
+        } else {
+            highScoreEl.setAttribute("class","odd-score-li");
+
+        }
+        var containerDivEl = document.createElement("div");
+        containerDivEl.setAttribute("class","container-score");
+        
+        var nameDivEl = document.createElement("div");
+        nameDivEl.textContent = scores[i].score;
+
+        var scoreDivEl = document.createElement("div");
+        scoreDivEl.textContent = scores[i].name;
+
+        // Add name and score as div within a div so we can easily use justify-content to get the right alignment
+        containerDivEl.appendChild(scoreDivEl);
+        containerDivEl.appendChild(nameDivEl);
+        
+
+        highScoreEl.appendChild(containerDivEl);
+        highScoreListEl.appendChild(highScoreEl);
+
+        // remove the function so it doesn't keep appending to the high scores table when we're already displaying it
+        var highScoresAEl = document.querySelector("#high-scores");
+        highScoresAEl.removeAttribute("onclick");
+
+    }
+    var highScoreTitleEl = document.createElement("h1");
+    highScoreTitleEl.textContent = "High Scores";
+
+    quizWrapperEl.appendChild(highScoreTitleEl);
+    quizWrapperEl.appendChild(highScoreListEl);
 }
 
 
@@ -284,3 +375,4 @@ var loadHighScores = function() {
 // When the user clicks the start button, start the quiz
 startButtonEl.addEventListener("click", startQuiz);
 saveButtonEl.addEventListener("click", saveScore);
+questionWrapperEl.addEventListener("mouseover", clearFeedback);
