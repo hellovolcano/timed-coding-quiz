@@ -41,9 +41,9 @@ var quizCounter = "";
 var startQuiz = function() {
 
     // set an interval for the counter
-    quizCounter = setInterval(counterInterval, 1000);
-    
     timer = 15;
+    
+    
     function counterInterval() {
         if (timer >= 0) {
             
@@ -52,7 +52,11 @@ var startQuiz = function() {
             endQuiz();
         }
     };
+    // calling the counterInterval function immediately so there is no delay on first pass
+    counterInterval();
+    quizCounter = setInterval(counterInterval, 1000);
 
+    //start building the quiz questions
     buildQuiz();
 }
 
