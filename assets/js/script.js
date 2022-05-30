@@ -164,7 +164,8 @@ var checkAnswerHandler = function(answer, i) {
         ans = true;
 
     } else {
-        ans = false;   
+        ans = false;
+        timer -= 6;   
     }
 
     giveFeedback(ans);
