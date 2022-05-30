@@ -110,7 +110,7 @@ var quizLoop = function (interval) {
 
 var askQuestion = function(num) {
 
-        question = document.createElement("h3");
+        question = document.createElement("h2");
 
         question.textContent = allQuestions[num].name;
 
